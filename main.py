@@ -2,9 +2,13 @@ import os
 import time
 import replicate  # pip install replicate
 from gtts import gTTS  # pip install gtts
+# pip install googletrans==4.0.0-rc1 4.0버전으로 설치해야 오류가 나지 않는다.
+from googletrans import Translator
 from playsound import playsound  # pip install playsound, pip3 install PyObjC
 
 start = time.time()
+
+translator = Translator()
 
 os.environ["REPLICATE_API_TOKEN"] = "e703f82f0d7127588a4bd85d57284c3acb192ae5"
 
@@ -13,12 +17,15 @@ output = replicate.run(
     input={"image": open("image.jpeg", "rb")}
 )
 
+# 즐겨봅니다.  src는 입력언어,  dest는 원하는 출력언어
+trans_output = translator.translate(output, src='en', dest='ko').text
+
 audio = 'image_caption.mp3'
-language = 'en'
+language = 'ko'
 
 sp = gTTS(
     lang=language,
-    text=output,
+    text=trans_output,
     slow=False
 )
 sp.save(audio)
