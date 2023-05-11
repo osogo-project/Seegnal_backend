@@ -22,13 +22,31 @@ class CaptionImageUploadView(APIView):
             serializer.save()
             output = replicate.run(
                 "rmokady/clip_prefix_caption:9a34a6339872a03f45236f114321fb51fc7aa8269d38ae0ce5334969981e4cd8",
-                input={"image": open(f'{os.getcwd()}/Seegnal_backend/{serializer.data["image"][1:]}', 'rb')}
-            )  # time : 2.69s
+                input={"image": open(
+                    f'{os.getcwd()}/Seegnal_backend/{serializer.data["image"][1:]}', 'rb')}
+            )
             trans_output = translator.translate(
                 output, src='en', dest='ko'
             ).text
-            # time : 3.79s
 
             return Response({'text': trans_output}, status=201)
+        else:
+            return Response(serializer.errors, status=400)
+
+
+class CaptionImageUploadENView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = CaptionImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            output = replicate.run(
+                "rmokady/clip_prefix_caption:9a34a6339872a03f45236f114321fb51fc7aa8269d38ae0ce5334969981e4cd8",
+                input={"image": open(
+                    f'{os.getcwd()}/Seegnal_backend/{serializer.data["image"][1:]}', 'rb')}
+            )
+
+            return Response({'text': output}, status=201)
         else:
             return Response(serializer.errors, status=400)
