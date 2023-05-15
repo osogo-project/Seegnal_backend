@@ -30,14 +30,18 @@ class ImageCaptioningKRView(APIView):
             image_path = convert_uploaded_file_to_path(image)
             output = replicate.run(
                 "rmokady/clip_prefix_caption:9a34a6339872a03f45236f114321fb51fc7aa8269d38ae0ce5334969981e4cd8",
-                input={"image": open(image_path, 'rb')}
+                input={
+                    "image": open(image_path, 'rb'),
+                    "model": "conceptual-captions",
+                    "use_beam_search": True
+                }
             )
             trans_output = translator.translate(
                 output, src='en', dest='ko'
             ).text
             return Response({'text': trans_output}, status=201)
         else:
-            return Response(serializer.errors, status=400)
+            return Response({'text': 'error'}, status=400)
 
 
 class ImageCaptioningENView(APIView):
@@ -48,7 +52,11 @@ class ImageCaptioningENView(APIView):
             image_path = convert_uploaded_file_to_path(image)
             output = replicate.run(
                 "rmokady/clip_prefix_caption:9a34a6339872a03f45236f114321fb51fc7aa8269d38ae0ce5334969981e4cd8",
-                input={"image": open(image_path, 'rb')}
+                input={
+                    "image": open(image_path, 'rb'),
+                    "model": "conceptual-captions",
+                    "use_beam_search": True
+                }
             )
             return Response({'text': output}, status=201)
         else:
@@ -58,7 +66,7 @@ class ImageCaptioningENView(APIView):
 class CaptionImageUploadView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = CaptionImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -79,7 +87,7 @@ class CaptionImageUploadView(APIView):
 class CaptionImageUploadENView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = CaptionImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
