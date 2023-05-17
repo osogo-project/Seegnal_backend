@@ -1,4 +1,4 @@
-from .views import CaptionImageUploadView, CaptionImageUploadENView, ImageCaptioningKRView, ImageCaptioningENView
+from .views import CaptionImageUploadView, CaptionImageUploadENView
 from django.urls import path
 
 urlpatterns = [

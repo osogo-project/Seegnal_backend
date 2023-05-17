@@ -1,14 +1,14 @@
 import os
-import json
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CaptionImageSerializer
 from googletrans import Translator
-from tempfile import NamedTemporaryFile
 import replicate
 
+
+translator = Translator()
 
 os.environ["REPLICATE_API_TOKEN"] = "e703f82f0d7127588a4bd85d57284c3acb192ae5"
 
