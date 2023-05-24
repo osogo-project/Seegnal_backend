@@ -5,3 +5,7 @@ from django.db import models
 
 class CaptionImage(models.Model):
     image = models.ImageField(upload_to='img/')
+
+
+class OCRImage(models.Model):
+    image = models.ImageField()
